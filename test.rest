@@ -1,0 +1,24 @@
+/// REGISTER
+POST http://localhost:8080/users/register
+Content-Type: application/json
+
+{
+    "Name": "Joy",
+    "Email": "joy@gmail.com",
+    "Password": "12345"
+}
+
+// LOGIN
+###
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+    "Email": "joy@gmail.com",
+    "Password": "12345"
+}
+
+// PROFILE
+###
+GET http://localhost:8080/users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtlbkBnbWFpbC5jb20iLCJleHAiOjE3NjMyNTczMzMsImlhdCI6MTc2MzE3MDkzM30.DDoCHrVzNbdCDflrqOEmOdhMpvnH7DDWxMcQe4d7Mhc
