@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"learn_clean_architecture/internal/entity"
+	"learn_clean_architecture/internal/domain"
 	"log"
 	"os"
 
@@ -17,11 +17,11 @@ func ConnectDB() *gorm.DB {
 	viper.SetConfigFile(".env")
 	viper.ReadInConfig()
 
-	host := viper.GetString("HOST")
-	user := viper.GetString("USER")
-	password := viper.GetString("PASSWORD")
-	dbname := viper.GetString("DBNAME")
-	port := viper.GetString("PORT")
+	host := viper.GetString("DB_HOST")
+	user := viper.GetString("DB_USER")
+	password := viper.GetString("DB_PASSWORD")
+	dbname := viper.GetString("DB_NAME")
+	port := viper.GetString("DB_PORT")
 
 	if host == "" || user == "" || password == "" || dbname == "" || port == "" {
 		log.Fatal("missing env variables")
@@ -37,7 +37,7 @@ func ConnectDB() *gorm.DB {
 		os.Exit(1)
 	}
 
-	err = db.AutoMigrate(&entity.User{})
+	err = db.AutoMigrate(&domain.User{})
 
 	if err != nil {
 		log.Fatal("failed to migrate db", err)

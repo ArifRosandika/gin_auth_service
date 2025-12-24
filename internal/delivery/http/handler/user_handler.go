@@ -1,21 +1,20 @@
-package http
+package handler
 
 import (
-	"learn_clean_architecture/internal/delivery/http/request"
+	"learn_clean_architecture/internal/delivery/http/dto/request"
+	"learn_clean_architecture/internal/domain"
 	"learn_clean_architecture/internal/helper"
-	"learn_clean_architecture/internal/usecase"
 	"net/http"
 	"strings"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
 type UserHandler struct {
-	usecase usecase.UserUseCase
+	usecase domain.UserUseCase
 }
 
-func NewUserHandler(u usecase.UserUseCase) *UserHandler {
+func NewUserHandler(u domain.UserUseCase) *UserHandler {
 	return &UserHandler{
 		usecase: u,
 	}
@@ -36,7 +35,7 @@ func (h *UserHandler) Register(c *gin.Context) {
 		return
 	}
 
-	if err := h.usecase.Register(req); err != nil {
+	if err := h.usecase.Register(c.Request.Context(), req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -47,27 +46,27 @@ func (h *UserHandler) Register(c *gin.Context) {
 	})
 }
 
-func (h *UserHandler) Login(c *gin.Context) {
-	var req request.LoginUserRequest
+// func (h *UserHandler) Login(c *gin.Context) {
+// 	var req request.LoginUserRequest
 
-	if err := c.ShouldBindJSON(&req); err != nil {
-		helper.ErrorResponse(c, http.StatusBadRequest, err.Error())
-		return
-	}
+// 	if err := c.ShouldBindJSON(&req); err != nil {
+// 		helper.ErrorResponse(c, http.StatusBadRequest, err.Error())
+// 		return
+// 	}
 
-	res, err := h.usecase.Login(req)
+// 	res, err := h.usecase.Login(c.Request.Context(), req)
 
-	if err != nil {
-		helper.ErrorResponse(c, http.StatusUnauthorized, err.Error())
-		return
-	}
+// 	if err != nil {
+// 		helper.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+// 		return
+// 	}
 
-	helper.SuccessResponse(c, "login succcessfully", res)
-}
+// 	helper.SuccessResponse(c, "login succcessfully", res)
+// }
 
 func (h *UserHandler) Profile(c *gin.Context) {
 	email, _ := c.Get("email")
-	user, err := h.usecase.GetProfile(email.(string))
+	user, err := h.usecase.GetProfile(c.Request.Context(), email.(string))
 
 	if err != nil {
 		helper.ErrorResponse(c, http.StatusUnauthorized, err.Error())

@@ -21,4 +21,4 @@ Content-Type: application/json
 // PROFILE
 ###
 GET http://localhost:8080/users/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtlbkBnbWFpbC5jb20iLCJleHAiOjE3NjMyNTczMzMsImlhdCI6MTc2MzE3MDkzM30.DDoCHrVzNbdCDflrqOEmOdhMpvnH7DDWxMcQe4d7Mhc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6ImpveUBnbWFpbC5jb20iLCJleHAiOjE3NjYxNTY4NjAsImlhdCI6MTc2NjE1NTk2MH0.SRjtfTwZz6KIP05LFBvm3mEfCJcYyR0DGRYL8k1_KwA
