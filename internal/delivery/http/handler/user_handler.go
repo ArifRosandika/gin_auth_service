@@ -46,24 +46,6 @@ func (h *UserHandler) Register(c *gin.Context) {
 	})
 }
 
-// func (h *UserHandler) Login(c *gin.Context) {
-// 	var req request.LoginUserRequest
-
-// 	if err := c.ShouldBindJSON(&req); err != nil {
-// 		helper.ErrorResponse(c, http.StatusBadRequest, err.Error())
-// 		return
-// 	}
-
-// 	res, err := h.usecase.Login(c.Request.Context(), req)
-
-// 	if err != nil {
-// 		helper.ErrorResponse(c, http.StatusUnauthorized, err.Error())
-// 		return
-// 	}
-
-// 	helper.SuccessResponse(c, "login succcessfully", res)
-// }
-
 func (h *UserHandler) Profile(c *gin.Context) {
 	email, _ := c.Get("email")
 	user, err := h.usecase.GetProfile(c.Request.Context(), email.(string))

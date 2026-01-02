@@ -8,12 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewUserRouter(r *gin.Engine, h *handler.UserHandler, tokenSrv domain.TokenService) {
+func NewUserRouter(r *gin.Engine, a *handler.AuthHandler, h *handler.UserHandler, tokenSrv domain.TokenService) {
 
 	auth := r.Group("/auth")
 	
-	auth.POST("/refresh", h.Refresh)
-	auth.POST("/login", h.Login)
+	auth.POST("/refresh", a.Refresh)
+	auth.POST("/login", a.Login)
 	
 	userRoutes := r.Group("/users") 
 	

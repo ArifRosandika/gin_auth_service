@@ -27,7 +27,7 @@ func AuthMiddleware(tokenSrv domain.TokenService) gin.HandlerFunc {
 
 		tokenStr := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
 
-		email, err := tokenSrv.ValidateToken(ctx, tokenStr)
+		email, err := tokenSrv.ValidateRefreshToken(ctx, tokenStr)
 
 		if err != nil {
 			helper.ErrorResponse(ctx, http.StatusUnauthorized, err.Error())

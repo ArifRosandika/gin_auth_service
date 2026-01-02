@@ -66,7 +66,7 @@ func (s *jwtService) GenerateRefreshToken(ctx context.Context, userID uint) (str
 }
 
 
-func (s *jwtService) ValidateToken(ctx context.Context, tokenStr string) (string, error) {
+func (s *jwtService) ValidateRefreshToken(ctx context.Context, tokenStr string) (uint, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &jwtClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
@@ -75,16 +75,10 @@ func (s *jwtService) ValidateToken(ctx context.Context, tokenStr string) (string
 	})
 
 	if err != nil || !token.Valid {
-		return "", errors.New("invalid token")
+		return 0, errors.New("invalid token")
 	}
 
 	claims := token.Claims.(*jwtClaims)
 
-	userID := uint(claims["user_id"].(float64))
-	email := claims["email"].(string)
-
-	return &RefreshTokenClaims{
-		UserID: userID,
-		Email: email,
-	}, nil
+	return claims.UserID, nil
 }

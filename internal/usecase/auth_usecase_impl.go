@@ -11,14 +11,15 @@ import (
 )
 
 type authUseCaseImpl struct {
-	userRepo domain.UserRepository
 	tokenSrv domain.TokenService
-	authRepo domain.AuthRepository
+	userRepo domain.UserRepository
 }
 
-type RefreshTokenClaims struct {
-	UserID uint
-	Email string
+func NewAuthUseCase(tokenSrv domain.TokenService, userRepo domain.UserRepository) domain.AuthUseCase {
+	return &authUseCaseImpl{
+		tokenSrv: tokenSrv,
+		userRepo: userRepo,
+	}
 }
 
 func (u *authUseCaseImpl) Login(ctx context.Context, req request.LoginUserRequest) (response.LoginUserResponse, error) {
@@ -40,7 +41,7 @@ func (u *authUseCaseImpl) Login(ctx context.Context, req request.LoginUserReques
 
 	refresh, err := u.tokenSrv.GenerateRefreshToken(ctx, user.ID)
 
-	if err := u.authRepo.SaveRefreshToken(ctx, user.ID, refresh, RefreshTokenTTL); err != nil {
+	if err := u.userRepo.SaveRefreshToken(ctx, user.ID, refresh, RefreshTokenTTL); err != nil {
 		return response.LoginUserResponse{}, fmt.Errorf("failed saving refresh token %w", err)
 	}
 
@@ -52,21 +53,30 @@ func (u *authUseCaseImpl) Login(ctx context.Context, req request.LoginUserReques
 
 func (u *authUseCaseImpl) Refresh(ctx context.Context, refreshToken string) (string, error) {
 
-	claims, err := u.tokenSrv.ValidateToken(ctx, refreshToken)
+	userID, err := u.tokenSrv.ValidateRefreshToken(ctx, refreshToken)
 	if err != nil {
 		return "", errors.New("invalid refresh token")
 	}
 
-	exist, err := u.authRepo.Exists(ctx, claims.UserID, refreshToken)
+	exist, err := u.userRepo.Exists(ctx, userID, refreshToken)
+    if err != nil {
+        return "", fmt.Errorf("failed checking refresh token: %w", err)
+    }
+    if !exist {
+        return "", errors.New("refresh token revoked")
+    }
+
+	user, err := u.userRepo.FindByID(ctx, userID)
+
 	if err != nil {
-		return "", fmt.Errorf("failed checking refresh token %w", err)
+		return "", fmt.Errorf("failed fetch user: %w", err)
 	}
 
-	if !exist {
-		return "", errors.New("refresh token revoked")
+	if user == nil {
+		return "", errors.New("user not found")
 	}
 
-	access, err := u.tokenSrv.GenerateAccessToken(ctx, claims.UserID, claims.Email)
+	access, err := u.tokenSrv.GenerateAccessToken(ctx, user.ID, user.Email)
 
 	if err != nil {
 		return "", fmt.Errorf("generate access token: %w", err)

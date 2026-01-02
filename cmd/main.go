@@ -28,9 +28,12 @@ func main() {
 	tokenSrv := usecase.NewTokenService(secret, tokenRepo)
 
 	userUseCase := usecase.NewUserUseCase(userRepo, tokenRepo, tokenSrv)
+	authUseCase := usecase.NewAuthUseCase(tokenSrv, userRepo)
 
 	userHandler := handler.NewUserHandler(userUseCase)
-	router.NewUserRouter(r, userHandler, tokenSrv)
+	authHandler := handler.NewAuthHandler(authUseCase)
+
+	router.NewUserRouter(r, authHandler, userHandler, tokenSrv)
 
 	r.Run(":8080")
 }
