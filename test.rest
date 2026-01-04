@@ -10,7 +10,7 @@ Content-Type: application/json
 
 // LOGIN
 ###
-POST http://localhost:8080/users/login
+POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
@@ -22,3 +22,7 @@ Content-Type: application/json
 ###
 GET http://localhost:8080/users/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6ImpveUBnbWFpbC5jb20iLCJleHAiOjE3NjYxNTY4NjAsImlhdCI6MTc2NjE1NTk2MH0.SRjtfTwZz6KIP05LFBvm3mEfCJcYyR0DGRYL8k1_KwA
+
+/// REFRESH TOKEN
+###
+POST http://localhost:8080/auth/refresh

@@ -13,9 +13,9 @@ import (
 
 
 func ConnectDB() *gorm.DB {
-
+	viper.AutomaticEnv()
 	viper.SetConfigFile(".env")
-	viper.ReadInConfig()
+	_ = viper.ReadInConfig()
 
 	host := viper.GetString("DB_HOST")
 	user := viper.GetString("DB_USER")

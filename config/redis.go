@@ -14,6 +14,8 @@ func InitRedis() *redis.Client {
 	host := viper.GetString("REDIS_HOST")
 	port := viper.GetString("REDIS_PORT")
 
+	fmt.Println(host, port)
+
 	addr := fmt.Sprintf("%s:%s", host, port)
 
 	client := redis.NewClient(&redis.Options{
