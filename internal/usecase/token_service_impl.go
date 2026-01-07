@@ -82,3 +82,20 @@ func (s *jwtService) ValidateRefreshToken(ctx context.Context, tokenStr string) 
 
 	return claims.UserID, nil
 }
+
+func (s *jwtService) ValidateAccessToken(ctx context.Context, tokenStr string) (uint, error) {
+	token, err := jwt.ParseWithClaims(tokenStr, &jwtClaims{}, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected signing method")
+		}
+		return []byte(s.secret), nil
+	})
+
+	if err != nil || !token.Valid {
+		return 0, errors.New("invalid token")
+	}
+
+	claims := token.Claims.(*jwtClaims)
+
+	return claims.UserID, nil
+}

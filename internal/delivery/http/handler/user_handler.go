@@ -40,22 +40,27 @@ func (h *UserHandler) Register(c *gin.Context) {
 		return
 	}
 
-	helper.SuccessResponse(c, "register succcessfully", gin.H{
+	helper.CreatedResponse(c, "register succcessfully", gin.H{
 		"name": req.Name,
 		"email": req.Email,
 	})
 }
 
 func (h *UserHandler) Profile(c *gin.Context) {
-	email, _ := c.Get("email")
-	user, err := h.usecase.GetProfile(c.Request.Context(), email.(string))
-
-	if err != nil {
-		helper.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+	userID := c.GetUint("user_id")
+	if userID == 0 {
+		helper.ErrorResponse(c, http.StatusUnauthorized, "unauthorized")
 		return
 	}
 
-	helper.SuccessResponse(c, "profile", gin.H{
+	user, err := h.usecase.GetProfile(c.Request.Context(), userID)
+
+	if err != nil {
+		helper.ErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	helper.SuccessResponse(c, "user profile", gin.H{
 		"name": user.Name,
 		"email": strings.ToLower(user.Email),
 	})

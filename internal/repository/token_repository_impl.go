@@ -48,3 +48,18 @@ func (r *redisTokenRepo) IsBlacklisted(ctx context.Context, token string) (bool,
 
 	return true, nil
 }
+
+func (r *redisTokenRepo) Exists(ctx context.Context, userID uint, token string) (bool, error) {
+	key := fmt.Sprintf("refresh: %d", userID)
+	tkn, err := r.cache.Get(ctx, key)
+
+	if err != nil {
+		if err == redis.Nil {
+			return false, nil
+		}
+
+		return false, err
+	}
+
+	return tkn == token, nil
+}

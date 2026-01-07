@@ -37,7 +37,7 @@ func ConnectDB() *gorm.DB {
 		os.Exit(1)
 	}
 
-	err = db.AutoMigrate(&domain.User{})
+	err = db.AutoMigrate(&domain.User{}, &domain.RefreshToken{})
 
 	if err != nil {
 		log.Fatal("failed to migrate db", err)

@@ -31,6 +31,6 @@ func (u *userUseCaseImpl) Register(ctx context.Context, req request.RegisterUser
 	return u.userRepo.Create(ctx, user)
 }
 
-func (u *userUseCaseImpl) GetProfile(ctx context.Context, email string) (*domain.User, error) {
-	return u.userRepo.FindByEmail(ctx, email)
+func (u *userUseCaseImpl) GetProfile(ctx context.Context, UserID uint) (*domain.User, error) {
+	return u.userRepo.FindByID(ctx, UserID)
 }

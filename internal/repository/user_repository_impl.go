@@ -41,7 +41,7 @@ func (r *userRepositoryImpl) FindByID(ctx context.Context, userID uint) (*domain
 }
 
 func (r *userRepositoryImpl) SaveRefreshToken(ctx context.Context, userID uint, token string, ttl time.Duration) error {
-	return r.DB.Where("id = ?", userID).Update("refresh_token", token).Error
+	return r.DB.Model(&domain.RefreshToken{}).Where("refresh_token = ?", token).Update("refresh_token", token).Error
 }
 
 func (r *userRepositoryImpl) Exists(ctx context.Context, userID uint, token string) (bool, error) {

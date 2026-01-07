@@ -12,12 +12,14 @@ import (
 
 type authUseCaseImpl struct {
 	tokenSrv domain.TokenService
+	tokenRepo domain.RedisTokenRepository
 	userRepo domain.UserRepository
 }
 
-func NewAuthUseCase(tokenSrv domain.TokenService, userRepo domain.UserRepository) domain.AuthUseCase {
+func NewAuthUseCase(tokenSrv domain.TokenService, userRepo domain.UserRepository, tokenRepo domain.RedisTokenRepository) domain.AuthUseCase {
 	return &authUseCaseImpl{
 		tokenSrv: tokenSrv,
+		tokenRepo: tokenRepo,
 		userRepo: userRepo,
 	}
 }
@@ -41,8 +43,8 @@ func (u *authUseCaseImpl) Login(ctx context.Context, req request.LoginUserReques
 
 	refresh, err := u.tokenSrv.GenerateRefreshToken(ctx, user.ID)
 
-	if err := u.userRepo.SaveRefreshToken(ctx, user.ID, refresh, RefreshTokenTTL); err != nil {
-		return response.LoginUserResponse{}, fmt.Errorf("failed saving refresh token %w", err)
+	if err != nil {
+		return response.LoginUserResponse{}, err
 	}
 
 	return response.LoginUserResponse{
@@ -58,7 +60,7 @@ func (u *authUseCaseImpl) Refresh(ctx context.Context, refreshToken string) (str
 		return "", errors.New("invalid refresh token")
 	}
 
-	exist, err := u.userRepo.Exists(ctx, userID, refreshToken)
+	exist, err := u.tokenRepo.Exists(ctx, userID, refreshToken)
     if err != nil {
         return "", fmt.Errorf("failed checking refresh token: %w", err)
     }
@@ -68,19 +70,9 @@ func (u *authUseCaseImpl) Refresh(ctx context.Context, refreshToken string) (str
 
 	user, err := u.userRepo.FindByID(ctx, userID)
 
-	if err != nil {
-		return "", fmt.Errorf("failed fetch user: %w", err)
-	}
-
-	if user == nil {
+	if err != nil || user == nil {
 		return "", errors.New("user not found")
 	}
 
-	access, err := u.tokenSrv.GenerateAccessToken(ctx, user.ID, user.Email)
-
-	if err != nil {
-		return "", fmt.Errorf("generate access token: %w", err)
-	}
-
-	return access, nil
+	return u.tokenSrv.GenerateAccessToken(ctx, user.ID, user.Email)
 }

@@ -3,8 +3,8 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-    "Name": "Joy",
-    "Email": "joy@gmail.com",
+    "Name": "Ben",
+    "Email": "ben@gmail.com",
     "Password": "12345"
 }
 
@@ -14,15 +14,19 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-    "Email": "joy@gmail.com",
+    "Email": "ben@gmail.com",
     "Password": "12345"
 }
 
 // PROFILE
 ###
 GET http://localhost:8080/users/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6ImpveUBnbWFpbC5jb20iLCJleHAiOjE3NjYxNTY4NjAsImlhdCI6MTc2NjE1NTk2MH0.SRjtfTwZz6KIP05LFBvm3mEfCJcYyR0DGRYL8k1_KwA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJlbWFpbCI6ImJlbkBnbWFpbC5jb20iLCJleHAiOjE3Njc4MDQ3NTgsImlhdCI6MTc2NzgwMzg1OH0.P3cC3C6Lf6Um2mx32MQdHMca0MlR9OIlnmgPUQ4umnQ
 
 /// REFRESH TOKEN
 ###
-POST http://localhost:8080/auth/refresh
+POST http://localhost:8080/auth/refresh 
+
+{
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE3Njg0MDc3NjgsImlhdCI6MTc2NzgwMjk2OH0.O3_GkFWY3NvD3ScLILuqCpRF-h9Q78VEaCKVOBMb90g"
+}

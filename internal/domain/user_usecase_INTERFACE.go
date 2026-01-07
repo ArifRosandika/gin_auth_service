@@ -7,5 +7,5 @@ import (
 
 type UserUseCase interface {
 	Register(ctx context.Context, req request.RegisterUserRequest) error
-	GetProfile(ctx context.Context, email string) (*User, error)
+	GetProfile(ctx context.Context, UserID uint) (*User, error)
 }

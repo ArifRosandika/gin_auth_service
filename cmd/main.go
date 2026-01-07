@@ -28,7 +28,7 @@ func main() {
 	tokenSrv := usecase.NewTokenService(secret, tokenRepo)
 
 	userUseCase := usecase.NewUserUseCase(userRepo, tokenRepo, tokenSrv)
-	authUseCase := usecase.NewAuthUseCase(tokenSrv, userRepo)
+	authUseCase := usecase.NewAuthUseCase(tokenSrv, userRepo, tokenRepo)
 
 	userHandler := handler.NewUserHandler(userUseCase)
 	authHandler := handler.NewAuthHandler(authUseCase)

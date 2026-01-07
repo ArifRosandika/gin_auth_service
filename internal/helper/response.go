@@ -16,3 +16,11 @@ func ErrorResponse(c *gin.Context, status int, message string) {
 		"message": message,
 	})
 }
+
+func CreatedResponse(c *gin.Context, message string, data interface{}) {
+	c.JSON(201, gin.H{
+		"status" : "created",
+		"message": message,
+		"data": data,
+	})
+}

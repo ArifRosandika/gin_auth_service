@@ -19,7 +19,7 @@ func AuthMiddleware(tokenSrv domain.TokenService) gin.HandlerFunc {
 			return 
 		}	
 
-		if !strings.HasPrefix(authHeader, "Bearer") {
+		if !strings.HasPrefix(authHeader, "Bearer ") {
 			helper.ErrorResponse(ctx, http.StatusUnauthorized, "invalid autorization")
 			ctx.Abort()
 			return 
@@ -27,7 +27,7 @@ func AuthMiddleware(tokenSrv domain.TokenService) gin.HandlerFunc {
 
 		tokenStr := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
 
-		email, err := tokenSrv.ValidateRefreshToken(ctx, tokenStr)
+		userID, err := tokenSrv.ValidateAccessToken(ctx, tokenStr)
 
 		if err != nil {
 			helper.ErrorResponse(ctx, http.StatusUnauthorized, err.Error())
@@ -35,7 +35,7 @@ func AuthMiddleware(tokenSrv domain.TokenService) gin.HandlerFunc {
 			return 
 		}
 
-		ctx.Set("email", email)
+		ctx.Set("user_id", userID)
 		ctx.Next()
 	}
 }
