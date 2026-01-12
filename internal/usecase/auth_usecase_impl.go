@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 	"errors"
 	"fmt"
 	"learn_clean_architecture/internal/delivery/http/dto/request"
@@ -55,24 +56,28 @@ func (u *authUseCaseImpl) Login(ctx context.Context, req request.LoginUserReques
 
 func (u *authUseCaseImpl) Refresh(ctx context.Context, refreshToken string) (string, error) {
 
-	userID, err := u.tokenSrv.ValidateRefreshToken(ctx, refreshToken)
+	userID, err := u.tokenRepo.GetUserIDByToken(ctx, refreshToken)
 	if err != nil {
-		return "", errors.New("invalid refresh token")
+		return "", errors.New("refresh token revoked or invalid")
 	}
-
-	exist, err := u.tokenRepo.Exists(ctx, userID, refreshToken)
-    if err != nil {
-        return "", fmt.Errorf("failed checking refresh token: %w", err)
-    }
-    if !exist {
-        return "", errors.New("refresh token revoked")
-    }
+	fmt.Print("token:", refreshToken)
+	fmt.Print("userID:", userID)
 
 	user, err := u.userRepo.FindByID(ctx, userID)
-
 	if err != nil || user == nil {
+		fmt.Print("userID:", userID)
 		return "", errors.New("user not found")
 	}
 
-	return u.tokenSrv.GenerateAccessToken(ctx, user.ID, user.Email)
+	access, err := u.tokenSrv.GenerateAccessToken(ctx, user.ID, user.Email)
+
+	if err != nil {
+		return "", err
+	}
+
+	if err := u.tokenRepo.DeleteByToken(ctx, refreshToken); err != nil {
+		log.Println(err)
+	}
+
+	return access, nil
 }

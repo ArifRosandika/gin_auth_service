@@ -1,9 +1,11 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 	"learn_clean_architecture/internal/cache"
 	"learn_clean_architecture/internal/domain"
+	"strconv"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -20,46 +22,30 @@ func NewRedisTokenRepository(client *redis.Client) domain.RedisTokenRepository {
 }
 
 func (r *redisTokenRepo) SaveRefreshToken(ctx context.Context, userID uint, token string, ttl time.Duration) error {
-	key := fmt.Sprintf("refresh: %d", userID)
-	return r.cache.Set(ctx, key, token, ttl)
+	key := fmt.Sprintf("refresh:%s", token)
+	val := strconv.Itoa(int(userID))
+
+	return r.cache.Set(ctx, key, val, ttl)
 }
 
-func (r *redisTokenRepo) GetRefreshToken(ctx context.Context, userID uint) (string, error) {
-	key := fmt.Sprintf("refresh: %d", userID)
-	return r.cache.Get(ctx, key)
-}
-
-func (r *redisTokenRepo) BlackListToken(ctx context.Context, token string, ttl time.Duration) error {
-	key := fmt.Sprintf("blacklist: %s", token)
-	return r.cache.Set(ctx, key, "1", ttl)
-}
-
-func (r *redisTokenRepo) IsBlacklisted(ctx context.Context, token string) (bool, error) {
-	key := fmt.Sprintf("blacklist: %s", token)
-	_, err := r.cache.Exists(ctx, key)
-
-	if err == redis.Nil {
-		return false, nil
-	}
+func (r *redisTokenRepo) GetUserIDByToken(ctx context.Context, token string) (uint, error) {
+	key := fmt.Sprintf("refresh:%s", token)
+	val, err := r.cache.Get(ctx, key)
 
 	if err != nil {
-		return false, err
+		return 0, err
 	}
 
-	return true, nil
+	
+	id,err := strconv.ParseUint(val, 10, 64)
+	if val == "" {
+		return 0, errors.New("token revoked or invalid")
+	}
+	
+	return uint(id), nil
 }
 
-func (r *redisTokenRepo) Exists(ctx context.Context, userID uint, token string) (bool, error) {
-	key := fmt.Sprintf("refresh: %d", userID)
-	tkn, err := r.cache.Get(ctx, key)
-
-	if err != nil {
-		if err == redis.Nil {
-			return false, nil
-		}
-
-		return false, err
-	}
-
-	return tkn == token, nil
+func (r *redisTokenRepo) DeleteByToken(ctx context.Context, token string) error {
+	key := fmt.Sprintf("refresh:%s", token)
+	return r.cache.Delete(ctx, key)
 }

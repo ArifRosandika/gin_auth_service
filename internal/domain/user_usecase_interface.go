@@ -8,4 +8,5 @@ import (
 type UserUseCase interface {
 	Register(ctx context.Context, req request.RegisterUserRequest) error
 	GetProfile(ctx context.Context, UserID uint) (*User, error)
+	Logout(ctx context.Context, token string) error
 }

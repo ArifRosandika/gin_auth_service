@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"learn_clean_architecture/internal/delivery/http/dto/request"
 	"learn_clean_architecture/internal/domain"
 	"learn_clean_architecture/internal/helper"
@@ -32,5 +33,10 @@ func (u *userUseCaseImpl) Register(ctx context.Context, req request.RegisterUser
 }
 
 func (u *userUseCaseImpl) GetProfile(ctx context.Context, UserID uint) (*domain.User, error) {
+	fmt.Print("userID:", UserID)
 	return u.userRepo.FindByID(ctx, UserID)
+}
+
+func (u *userUseCaseImpl) Logout(ctx context.Context, token string) error {
+	return u.tokenRepo.DeleteByToken(ctx, token)
 }

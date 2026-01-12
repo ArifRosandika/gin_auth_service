@@ -5,6 +5,7 @@ import (
 	"errors"
 	"learn_clean_architecture/internal/domain"
 	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -61,12 +62,14 @@ func (s *jwtService) GenerateRefreshToken(ctx context.Context, userID uint) (str
 		return "", err
 	}
 
-	_ = s.tokenRepo.SaveRefreshToken(ctx, userID, tokenStr, RefreshTokenTTL)
+	if err := s.tokenRepo.SaveRefreshToken(ctx, userID, tokenStr, RefreshTokenTTL); err != nil {
+		return "", err
+	}
+	
 	return tokenStr, nil
 }
 
-
-func (s *jwtService) ValidateRefreshToken(ctx context.Context, tokenStr string) (uint, error) {
+func (s *jwtService) ValidateAccessToken(ctx context.Context, tokenStr string) (uint, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &jwtClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
@@ -83,7 +86,7 @@ func (s *jwtService) ValidateRefreshToken(ctx context.Context, tokenStr string) 
 	return claims.UserID, nil
 }
 
-func (s *jwtService) ValidateAccessToken(ctx context.Context, tokenStr string) (uint, error) {
+func (s *jwtService) ValidateRefreshToken(ctx context.Context, tokenStr string) (uint, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &jwtClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")

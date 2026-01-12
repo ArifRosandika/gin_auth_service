@@ -62,6 +62,23 @@ func (h *UserHandler) Profile(c *gin.Context) {
 
 	helper.SuccessResponse(c, "user profile", gin.H{
 		"name": user.Name,
+		"user_id": user.ID,
 		"email": strings.ToLower(user.Email),
 	})
+}
+
+func (h *UserHandler) Logout(c *gin.Context) {
+	var req request.LogoutRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		helper.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err  := h.usecase.Logout(c.Request.Context() , req.Token); err != nil {
+		helper.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	helper.SuccessResponse(c, "logout succcessfully", nil)
 }

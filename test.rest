@@ -21,12 +21,20 @@ Content-Type: application/json
 // PROFILE
 ###
 GET http://localhost:8080/users/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJlbWFpbCI6ImJlbkBnbWFpbC5jb20iLCJleHAiOjE3Njc4MDQ3NTgsImlhdCI6MTc2NzgwMzg1OH0.P3cC3C6Lf6Um2mx32MQdHMca0MlR9OIlnmgPUQ4umnQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJlbWFpbCI6ImJlbkBnbWFpbC5jb20iLCJleHAiOjE3NjgyMTI5MzgsImlhdCI6MTc2ODIxMjAzOH0.v6SHKIYW8rT6ynPrctlYfsR9rdr4Zk-NNwKDX9WCmx8
 
 /// REFRESH TOKEN
 ###
 POST http://localhost:8080/auth/refresh 
 
 {
-    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE3Njg0MDc3NjgsImlhdCI6MTc2NzgwMjk2OH0.O3_GkFWY3NvD3ScLILuqCpRF-h9Q78VEaCKVOBMb90g"
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE3Njg4MTY4OTEsImlhdCI6MTc2ODIxMjA5MX0.OBi9KkuIx6qwTAqsBDRj_eQyc4NjKWb88gyZlC8nd3U"
+}
+
+/// LOGOUT
+### 
+DELETE http://localhost:8080/users/logout
+
+{
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE3Njg4MTY4OTEsImlhdCI6MTc2ODIxMjA5MX0.OBi9KkuIx6qwTAqsBDRj_eQyc4NjKWb88gyZlC8nd3U"
 }

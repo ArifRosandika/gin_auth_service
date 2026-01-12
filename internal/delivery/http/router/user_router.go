@@ -19,4 +19,5 @@ func NewUserRouter(r *gin.Engine, a *handler.AuthHandler, h *handler.UserHandler
 	
 	userRoutes.POST("/register", h.Register)
 	userRoutes.GET("/profile", middleware.AuthMiddleware(tokenSrv), h.Profile)
+	userRoutes.DELETE("/logout", h.Logout)
 }

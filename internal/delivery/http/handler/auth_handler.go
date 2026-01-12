@@ -4,7 +4,6 @@ import (
 	"learn_clean_architecture/internal/delivery/http/dto/request"
 	"learn_clean_architecture/internal/domain"
 	"learn_clean_architecture/internal/helper"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,9 +21,6 @@ func NewAuthHandler(u domain.AuthUseCase) *AuthHandler {
 
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req request.LoginUserRequest
-
-	raw, _ := c.GetRawData()
-	log.Printf("raw: %s", raw)
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		helper.ErrorResponse(c, http.StatusBadRequest, err.Error())
