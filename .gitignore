@@ -1,1 +1,44 @@
-*.env
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.out
+*.test
+
+# Go build
+/bin/
+/build/
+/dist/
+
+# Go workspace
+/go.work
+/go.work.sum
+
+# Vendor (kalau tidak dipakai)
+vendor/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Coverage
+coverage.out
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-data/
