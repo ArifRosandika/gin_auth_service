@@ -104,7 +104,7 @@ Token becomes unusable immediately
 Refresh tokens are stateful and fully controlled by Redis.
 
 📁 Project Structure
-.
+gin_auth_service/
 ├── cmd/
 │   └── main.go                # Application entry point
 │
@@ -125,8 +125,8 @@ Refresh tokens are stateful and fully controlled by Redis.
 │   │       └── router/         # Route definitions
 │   │
 │   ├── domain/
-│   │   ├── user_usecase_interface.go
-│   │   └── auth_usecase_interface.go
+│   │   ├── auth_usecase_interface.go
+│   │   └── user_usecase_interface.go
 │   │
 │   ├── repository/
 │   │   ├── interfaces/
@@ -142,7 +142,7 @@ Refresh tokens are stateful and fully controlled by Redis.
 │       └── user_usecase.go
 │
 ├── env/
-│   └── .env.example            # Environment variable template
+│   └── .env.example            # Environment variables template
 │
 ├── docker-compose.yaml
 ├── Dockerfile
