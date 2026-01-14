@@ -76,9 +76,6 @@ The project follows Clean Architecture principles to keep business logic isolate
 ---
 
 ## 🔐 Authentication Flow
-Login
-
-a. Validate user credentials
 
 ### Login
 1. Validate user credentials
