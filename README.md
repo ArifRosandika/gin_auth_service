@@ -1,7 +1,10 @@
 Gin Auth Service
 
 A backend authentication service built with Go (Gin) implementing JWT-based authentication with access token & refresh token lifecycle, Redis-backed refresh token storage, and PostgreSQL for persistent user data.
+
 The project follows Clean Architecture principles to keep business logic isolated, testable, and maintainable.
+
+---
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/ArifRosandika/gin_auth_service?color=blue)
 ![GitHub repo size](https://img.shields.io/github/repo-size/ArifRosandika/gin_auth_service)
@@ -13,7 +16,9 @@ The project follows Clean Architecture principles to keep business logic isolate
 ![JWT](https://img.shields.io/badge/JWT-000000?logo=jsonwebtokens&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 
-📘 Table of Contents
+---
+
+## 📘 Table of Contents
 - [Overview](#overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -27,84 +32,77 @@ The project follows Clean Architecture principles to keep business logic isolate
 - [API Testing](#api-testing)
 - [License](#license)
 
-✨ Features
+---
 
-User registration & login
+## ✨ Features
 
-JWT Access Token authentication
+- User registration & login
 
-Refresh Token lifecycle management
+- WT access token authentication
 
-Refresh Token revocation (logout & rotation)
+- Refresh token lifecycle management
 
-Redis as authoritative refresh token store
+- Refresh token revocation (logout & rotation)
 
-PostgreSQL persistence with GORM
+- Redis as authoritative refresh token store
 
-Clean Architecture (Handler → Usecase → Repository)
+- PostgreSQL persistence with GORM
 
-Environment-based configuration using Viper
+- Clean Architecture (Handler → Usecase → Repository)
 
-Dockerized with PostgreSQL & Redis via Docker Compose
+- Environment-based configuration using Viper
 
-🧱 Tech Stack
-Backend
+- Dockerized with PostgreSQL & Redis via Docker Compose
 
-Go
+---
 
-Gin – HTTP framework
+## 🧱 Tech Stack
 
-GORM – ORM for PostgreSQL
+### Backend
+- Go
+- Gin (HTTP framework)
+- GORM (PostgreSQL ORM)
+- JWT (HS256)
+- Redis (refresh token storage)
+- Argon2id (password hashing)
+- Validator
+- Viper
 
-JWT (HS256) – Authentication
+### Infrastructure
+- PostgreSQL
+- Redis
+- Docker & Docker Compose
 
-Redis – Refresh token storage & revocation
+---
 
-Argon2id – Password hashing
-
-Infrastructure
-
-PostgreSQL
-
-Redis
-
-Docker & Docker Compose
-
-🔐 Authentication Flow
+## 🔐 Authentication Flow
 Login
 
-Validate user credentials
+a. Validate user credentials
 
-Generate Access Token (short-lived)
+### Login
+1. Validate user credentials
+2. Generate short-lived access token
+3. Generate refresh token
+4. Store refresh token in Redis  
+   `refresh:<token> -> user_id`
 
-Generate Refresh Token
+### Refresh Token
+1. Client sends refresh token
+2. Server validates token existence in Redis
+3. Issue new access token
+4. Revoke old refresh token
 
-Store refresh token in Redis
+### Logout
+1. Client sends refresh token
+2. Refresh token is deleted from Redis
+3. Token becomes unusable immediately
 
-refresh:<token> -> user_id
 
-Refresh Token
+```text
 
-Client sends refresh token
-
-Server validates token existence in Redis
-
-Issue new access token
-
-Revoke old refresh token (delete from Redis)
-
-Logout
-
-Client sends refresh token
-
-Refresh token is deleted from Redis
-
-Token becomes unusable immediately
-
-Refresh tokens are stateful and fully controlled by Redis.
-
-📁 Project Structure
-gin_auth_service/
+### 📁 Project Structure
+.
 ├── cmd/
 │   └── main.go                # Application entry point
 │
@@ -120,8 +118,8 @@ gin_auth_service/
 │   │       ├── dto/
 │   │       │   ├── request/    # HTTP request DTOs
 │   │       │   └── response/   # HTTP response DTOs
-│   │       ├── handler/        # HTTP handlers (controllers)
-│   │       ├── middleware/     # HTTP middlewares (JWT, etc)
+│   │       ├── handler/        # HTTP handlers
+│   │       ├── middleware/     # HTTP middlewares
 │   │       └── router/         # Route definitions
 │   │
 │   ├── domain/
@@ -150,9 +148,11 @@ gin_auth_service/
 ├── go.sum
 └── README.md
 
+---
 
-🚀 Getting Started
-Prerequisites
+## 🚀Getting Started
+
+### Prerequisites
 
 Docker & Docker Compose
 
@@ -165,24 +165,17 @@ Run Locally (without Docker)
 go mod tidy
 go run cmd/main.go
 
-🔧 Environment Variables
-# App
-APP_PORT=8080
-JWT_SECRET=your_secret_key
+---
 
-# Database
-DB_HOST=postgres
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_NAME=auth_service_db
+## 🌱 Environment Variables
 
-# Redis
-REDIS_HOST=redis
-REDIS_PORT=6379
-REDIS_PASSWORD=
+Copy the example file and adjust values as needed:
 
-🧪 API Testing
+cp env/.env.example env/.env
+
+---
+
+## 🧪 API Testing
 
 A test.rest file is included for:
 
@@ -198,6 +191,8 @@ Logout
 
 Compatible with VS Code REST Client extension.
 
-📜 License
+---
+
+## 📜 License
 
 This project is licensed under the MIT License.
