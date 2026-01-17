@@ -6,6 +6,23 @@ The project follows Clean Architecture principles to keep business logic isolate
 
 ---
 
+## 🧩 Architecture Mapping
+
+| Layer            | Folder / File Path                         | Responsibility |
+|------------------|--------------------------------------------|----------------|
+| Main / Bootstrap | cmd/main.go                                | App bootstrap, dependency wiring |
+| Router           | internal/delivery/http/router              | HTTP route definitions |
+| Middleware       | internal/delivery/http/middleware          | Auth, logging, CORS |
+| Handler          | internal/delivery/http/handler             | HTTP request/response handling |
+| Usecase          | internal/usecase                           | Business logic |
+| Domain Interface | internal/domain                            | Business contracts (interfaces) |
+| Repository Impl  | internal/repository/impl                   | DB & Redis access |
+| Cache            | internal/cache                             | Redis connection |
+| Database         | config/database.go                         | PostgreSQL initialization |
+
+---
+
+## Overview
 ![GitHub last commit](https://img.shields.io/github/last-commit/ArifRosandika/gin_auth_service?color=blue)
 ![GitHub repo size](https://img.shields.io/github/repo-size/ArifRosandika/gin_auth_service)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
@@ -19,6 +36,7 @@ The project follows Clean Architecture principles to keep business logic isolate
 ---
 
 ## 📘 Table of Contents
+-[Architecture Mapping](#architecture-mapping)
 - [Overview](#overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
